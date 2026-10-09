@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 32: Dinh Dưỡng Và Tiêu Hóa Ở Người - KHTN 8</title>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --bg-light: #f0f9ff;
+            --text-dark: #0f172a;
+            --card-bg: #ffffff;
+        }
+
+        .accessibility-mode {
+            --primary: #000000;
+            --primary-dark: #1a1a1a;
+            --secondary: #047857;
+            --bg-light: #ffffff;
+            --text-dark: #000000;
+            --card-bg: #f8fafc;
+            font-size: 1.25rem;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; padding-bottom: 50px; font-size: 1.1rem; transition: all 0.3s; }
+
+        header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 1.5rem; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); position: relative; }
+        header h1 { font-size: 2rem; margin-bottom: 0.3rem; font-weight: 800; }
+        header p { font-size: 1.1rem; opacity: 0.95; }
+
+        .top-tools { position: absolute; right: 1rem; top: 1rem; display: flex; gap: 0.5rem; }
+        .btn-tool { background: rgba(255,255,255,0.2); border: 2px solid white; color: white; padding: 0.4rem 0.8rem; border-radius: 20px; cursor: pointer; font-size: 0.95rem; font-weight: bold; transition: 0.2s; }
+        .btn-tool:hover { background: white; color: var(--primary-dark); }
+
+        .nav-tabs { display: flex; justify-content: center; background: white; border-bottom: 3px solid #cbd5e1; overflow-x: auto; }
+        .tab-btn { padding: 1rem 1.2rem; border: none; background: none; font-weight: bold; font-size: 1.1rem; color: #475569; cursor: pointer; border-bottom: 4px solid transparent; white-space: nowrap; }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: #f8fafc; }
+
+        .container { max-width: 1050px; margin: 1.5rem auto; padding: 0 1rem; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .card { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.06); margin-bottom: 1.5rem; border: 1px solid #cbd5e1; }
+        .card-title { font-size: 1.4rem; color: var(--primary-dark); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 2px solid var(--bg-light); padding-bottom: 0.5rem; font-weight: 700; }
+
+        .btn-action { background: var(--primary); color: white; border: none; padding: 0.6rem 1.2rem; font-size: 1rem; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .btn-action:hover { background: var(--primary-dark); }
+
+        .grid-2col { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; margin: 1rem 0; }
+        
+        /* Interactive Digestion Simulation Box */
+        .sim-box { background: #e0f2fe; border: 2px dashed #0284c7; border-radius: 12px; padding: 1.5rem; text-align: center; }
+        .organ-display { font-size: 2.5rem; margin: 0.5rem 0; }
+
+        /* Quiz Component */
+        .quiz-opt { display: block; width: 100%; text-align: left; padding: 0.8rem; margin: 0.5rem 0; background: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 1.05rem; font-weight: 600; }
+        .quiz-opt:hover { background: #e2e8f0; }
+        .quiz-opt.correct { background: #d1fae5; border-color: #10b981; color: #065f46; }
+        .quiz-opt.incorrect { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+
+        .knowledge-box { background: #f0fdf4; border: 2px solid #22c55e; padding: 1.2rem; border-radius: 10px; margin-top: 1.2rem; }
+        .knowledge-box h4 { color: #15803d; font-size: 1.2rem; margin-bottom: 0.4rem; }
+
+        .support-box { background: #eff6ff; border-left: 5px solid #3b82f6; padding: 1rem; margin-top: 1.2rem; border-radius: 0 8px 8px 0; }
+        .tts-btn { background: #3b82f6; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: bold; }
+
+        .special-note { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 1rem; margin-top: 1rem; border-radius: 0 8px 8px 0; }
+
+        table.custom-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; }
+        table.custom-table th, table.custom-table td { border: 1px solid #cbd5e1; padding: 0.6rem 0.8rem; text-align: left; }
+        table.custom-table th { background-color: #e2e8f0; color: var(--primary-dark); }
+
+        @media (max-width: 768px) {
+            .grid-2col { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="top-tools">
+            <button class="btn-tool" onclick="toggleAccessibility()">♿ Trợ Năng</button>
+        </div>
+        <h1>BÀI 32: DINH DƯỠNG VÀ TIÊU HÓA Ở NGƯỜI</h1>
+        <p>Khoa Học Tự Nhiên 8 | Trường THCS Đinh Tiên Hoàng | GV: Nguyễn Như Hằng</p>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('act1')">🚀 1. Khởi Động</button>
+        <button class="tab-btn" onclick="switchTab('act2')">📖 2. Khám Phá Kiến Thức</button>
+        <button class="tab-btn" onclick="switchTab('act3')">🧩 3. Luyện Tập (Quiz)</button>
+        <button class="tab-btn" onclick="switchTab('act4')">🌟 4. Vận Dụng</button>
+    </div>
+
+    <div class="container">
+
+        <!-- HOẠT ĐỘNG 1: KHỞI ĐỘNG -->
+        <div id="act1" class="tab-content active">
+            <div class="card">
+                <div class="card-title">
+                    <span>🍕</span> Hoạt Động Khởi Động: Nhật Ký Chuyến Du Hành Của Miếng Pizza
+                </div>
+                <p><strong>Tình huống mở đầu:</strong></p>
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 1.2rem; border-radius: 10px; margin: 1rem 0;">
+                    <p>💬 <em>"Sáng nay, tôi (miếng Pizza) vừa được nhập tiệc vào khoang miệng. Theo các bạn, tôi sẽ đi qua những cơ quan nào trong cơ thể và tôi sẽ bị biến đổi ra sao để trở thành năng lượng giúp bạn học tập?"</em></p>
+                </div>
+
+                <div style="background: #fffbebfb; border-left: 5px solid var(--accent); padding: 1rem; margin-top: 1rem;">
+                    <h4>❓ Thảo luận cặp đôi (1.5 phút):</h4>
+                    <p>Thảo luận và dự đoán sơ đồ con đường di chuyển cũng như sự biến đổi của miếng Pizza trong cơ thể.</p>
+                    <button class="btn-action" style="margin-top: 0.8rem; background: var(--accent);" onclick="toggleElement('ans1')">💡 Xem dự đoán định hướng</button>
+                    <div id="ans1" style="display:none; margin-top: 0.8rem; background: white; padding: 0.8rem; border-radius: 6px; border: 1px solid #fcd34d;">
+                        <strong>Gợi ý sơ đồ đường đi:</strong> Khoang miệng → Thực quản → Dạ dày → Ruột nhỏ → Ruột già → Hậu môn. Thức ăn bị xé nhỏ và phân giải thành chất dinh dưỡng hấp thụ vào máu.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOẠT ĐỘNG 2: HÌNH THÀNH KIẾN THỨC -->
+        <div id="act2" class="tab-content">
+            <!-- 2.1 Khái niệm & Nhóm chất -->
+            <div class="card">
+                <div class="card-title">
+                    <span>🥗</span> 2.1. Khái Niệm Dinh Dưỡng Và Các Nhóm Chất Dinh Dưỡng
+                </div>
+
+                <p><strong>Khái niệm cốt lõi:</strong></p>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                    <li><strong>Chất dinh dưỡng:</strong> Là các chất có trong thức ăn mà cơ thể sử dụng làm nguyên liệu tạo năng lượng, xây dựng tế bào và điều hòa hoạt động sống.</li>
+                    <li><strong>Dinh dưỡng:</strong> Là quá trình thu nhận, biến đổi và sử dụng chất dinh dưỡng của cơ thể.</li>
+                </ul>
+
+                <h4>Vai trò của 6 nhóm chất dinh dưỡng chính:</h4>
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Nhóm chất</th>
+                            <th>Thực phẩm tiêu biểu</th>
+                            <th>Vai trò chính đối với cơ thể</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Carbohydrate</strong></td>
+                            <td>Cơm, bánh mì, khoai, ngô...</td>
+                            <td>Cung cấp năng lượng chủ yếu cho hoạt động sống.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Protein</strong></td>
+                            <td>Thịt, cá, trứng, sữa, đậu...</td>
+                            <td>Xây dựng/sửa chữa tế bào, cơ bắp, tạo enzyme.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lipid</strong></td>
+                            <td>Mỡ động vật, dầu thực vật...</td>
+                            <td>Dự trữ năng lượng, cấu tạo màng tế bào, hòa tan vitamin.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Vitamin</strong></td>
+                            <td>Rau xanh, trái cây, củ quả...</td>
+                            <td>Điều hòa hoạt động sống, tăng sức đề kháng.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Chất khoáng</strong></td>
+                            <td>Sữa, hải sản, muối iod...</td>
+                            <td>Cấu tạo xương, răng, tham gia tạo máu.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nước</strong></td>
+                            <td>Nước lọc, canh, nước trái cây...</td>
+                            <td>Môi trường hòa tan, vận chuyển các chất, điều hòa nhiệt độ.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 2.2 Cấu tạo hệ tiêu hóa & Tiêu hóa thức ăn -->
+            <div class="card">
+                <div class="card-title">
+                    <span>⚙️</span> 2.2. Cấu Tạo Hệ Tiêu Hóa Và Quá Trình Tiêu Hóa Thức Ăn
+                </div>
+
+                <div class="grid-2col">
+                    <div class="sim-box">
+                        <h4>Mô Phỏng "Chuyến Du Hành Tiêu Hóa"</h4>
+                        <div class="organ-display" id="organIcon">👄</div>
+                        <p id="organName" style="font-weight: bold; color: #0369a1; font-size: 1.2rem;">1. Khoang Miệng</p>
+                        <p id="organDesc" style="margin-top: 0.5rem;">Cơ học: Răng nhai đảo.<br>Hóa học: Amylase biến đổi tinh bột chín thành đường maltose.</p>
+                        <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap;">
+                            <button class="btn-action" onclick="prevOrgan()">⬅️ Cơ quan trước</button>
+                            <button class="btn-action" style="background: var(--secondary);" onclick="nextOrgan()">Cơ quan tiếp ➡️</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4>Sự phân loại các cơ quan tiêu hóa:</h4>
+                        <p><strong>1. Ống tiêu hóa:</strong> Miệng → Hầu → Thực quản → Dạ dày → Ruột nhỏ → Ruột già → Hậu môn.</p>
+                        <p style="margin-top: 0.5rem;"><strong>2. Tuyến tiêu hóa:</strong> Tuyến nước bọt, tuyến vị, gan, mật, tuyến tụy, tuyến ruột.</p>
+                        <div class="knowledge-box" style="margin-top: 1rem;">
+                            <h4>⭐ Điểm mấu chốt:</h4>
+                            <p><strong>Ruột nhỏ</strong> là nơi diễn ra quá trình tiêu hóa hóa học và <strong>hấp thụ chất dinh dưỡng chủ yếu</strong> của cơ thể nhờ diện tích bề mặt cực lớn (có nhiều nếp gấp và lông ruột).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bảng so sánh cơ học và hóa học -->
+                <h4 style="margin-top: 1rem;">So sánh biến đổi cơ học và hóa học tại các cơ quan:</h4>
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Cơ quan</th>
+                            <th>Biến đổi Cơ học</th>
+                            <th>Biến đổi Hóa học (Enzyme)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Khoang miệng</strong></td>
+                            <td>Răng cắn, nhai, nghiền; lưỡi đảo trộn.</td>
+                            <td>Enzyme Amylase: Tinh bột chín → Đường maltose.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dạ dày</strong></td>
+                            <td>Cơ dạ dày co bóp mạnh mẽ, đảo trộn.</td>
+                            <td>Enzyme Pepsin: Protein → Chuỗi peptide ngắn.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ruột nhỏ</strong></td>
+                            <td>Nhu động ruột di chuyển và đảo trộn.</td>
+                            <td>Dịch tụy, mật, ruột phân giải hoàn toàn Protein, Lipid, Glucid thành chất đơn giản.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="support-box">
+                    <strong>♿ Trợ năng giọng nói:</strong>
+                    <button class="tts-btn" onclick="speakText('Ruột nhỏ là cơ quan tiêu hóa và hấp thụ chất dinh dưỡng quan trọng nhất trong cơ thể người nhờ hệ thống lông ruột và các enzyme phân giải hoàn toàn thức ăn.')">🔊 Nghe tóm tắt trọng tâm</button>
+                </div>
+            </div>
+
+            <!-- 2.3 Bảo vệ hệ tiêu hóa -->
+            <div class="card">
+                <div class="card-title">
+                    <span>🛡️</span> 2.3. Bảo Vệ Hệ Tiêu Hóa Và An Toàn Thực Phẩm
+                </div>
+
+                <div class="grid-2col">
+                    <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e1;">
+                        <h4 style="color: var(--primary-dark);">Thói quen ăn uống khoa học</h4>
+                        <ul style="margin-left: 1.2rem; margin-top: 0.5rem;">
+                            <li>Ăn đúng giờ, đúng bữa, nhai kỹ nuốt chậm.</li>
+                            <li>Tạo không khí vui vẻ khi ăn.</li>
+                            <li>Hạn chế thức khuya, tránh vừa ăn vừa xem điện thoại.</li>
+                            <li>Hạn chế đồ chua cay, chất kích thích.</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e1;">
+                        <h4 style="color: var(--secondary);">An toàn vệ sinh thực phẩm</h4>
+                        <ul style="margin-left: 1.2rem; margin-top: 0.5rem;">
+                            <li>Lựa chọn thực phẩm tươi sống, nguồn gốc rõ ràng.</li>
+                            <li>Thực hiện "Ăn chín, uống sôi".</li>
+                            <li>Rửa tay bằng xà phòng trước khi ăn và sau khi đi vệ sinh.</li>
+                            <li>Bảo quản thực phẩm đúng cách, không ăn đồ ôi thiu.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOẠT ĐỘNG 3: LUYỆN TẬP -->
+        <div id="act3" class="tab-content">
+            <div class="card">
+                <div class="card-title">
+                    <span>🧩</span> Trò Chơi Luyện Tập: Đấu Trường Tiêu Hóa
+                </div>
+
+                <div id="quizContainer">
+                    <p style="font-weight: bold; font-size: 1.15rem;" id="quizQuestion">Câu 1: Quá trình tiêu hóa và hấp thụ chất dinh dưỡng diễn ra chủ yếu ở cơ quan nào?</p>
+                    <div id="quizOptions" style="margin-top: 1rem;"></div>
+                    <div id="quizFeedback" style="margin-top: 1rem; font-weight: bold;"></div>
+                </div>
+
+                <div style="margin-top: 1.5rem; text-align: right;">
+                    <button class="btn-action" id="nextBtn" style="display:none;" onclick="nextQuestion()">Câu tiếp theo ➡️</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOẠT ĐỘNG 4: VẬN DỤNG -->
+        <div id="act4" class="tab-content">
+            <div class="card">
+                <div class="card-title">
+                    <span>🌟</span> Hoạt Động Vận Dụng: Dự Án "Thực Đơn Dinh Dưỡng Xanh 4.0"
+                </div>
+
+                <p><strong>Nhiệm vụ thực hành tại nhà:</strong> Dựa vào kiến thức nhu cầu dinh dưỡng lứa tuổi học sinh THCS, em hãy thiết kế 1 thực đơn 3 bữa ăn cân đối dinh dưỡng cho gia đình trong 1 ngày.</p>
+
+                <div class="grid-2col" style="margin-top: 1rem;">
+                    <div style="background: #fdf2f8; border: 2px solid #f472b6; border-radius: 10px; padding: 1rem;">
+                        <h4 style="color: #be185d;">📋 Yêu cầu sản phẩm</h4>
+                        <ul style="margin-left: 1.2rem; margin-top: 0.5rem; font-size: 0.95rem;">
+                            <li>Đảm bảo đủ 4 nhóm chất dinh dưỡng chính.</li>
+                            <li>Cân đối tỉ lệ giữa đạm động vật và đạm thực vật.</li>
+                            <li>Giải thích ngắn gọn lý do chọn các món ăn.</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: #f0fdf4; border: 2px solid #4ade80; border-radius: 10px; padding: 1rem;">
+                        <h4 style="color: #15803d;">💡 Hình thức nộp</h4>
+                        <p style="font-size: 0.95rem; margin-top: 0.5rem;">Trình bày ra giấy A4 (vẽ/trang trí) hoặc thiết kế bản trình chiếu Canva/PowerPoint nộp vào tiết học sau.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function toggleAccessibility() {
+            document.body.classList.toggle('accessibility-mode');
+        }
+
+        function toggleElement(id) {
+            const el = document.getElementById(id);
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        /* Mô phỏng các cơ quan tiêu hóa */
+        const organData = [
+            { icon: "👄", name: "1. Khoang Miệng", desc: "Cơ học: Răng nhai, lưỡi đảo.\nHóa học: Enzyme Amylase biến đổi tinh bột chín → Đường maltose." },
+            { icon: "🥖", name: "2. Thực Quản", desc: "Cơ học: Nhu động thực quản dồn ép thức ăn đi xuống dạ dày." },
+            { icon: "🫁", name: "3. Dạ Dày", desc: "Cơ học: Co bóp mạnh mẽ đảo trộn thức ăn.\nHóa học: Enzyme Pepsin phân cắt Protein → Chuỗi peptide ngắn." },
+            { icon: "🌀", name: "4. Ruột Nhỏ", desc: "Hóa học chủ yếu: Dịch tụy, mật, ruột phân giải toàn bộ thức ăn thành chất đơn giản.\nHấp thụ chất dinh dưỡng vào máu." },
+            { icon: "🥬", name: "5. Ruột Già & Hậu Môn", desc: "Hấp thụ lại nước, tạo phân và thải các chất bã ra ngoài cơ thể." }
+        ];
+
+        let currentOrgan = 0;
+
+        function updateOrganDisplay() {
+            document.getElementById('organIcon').innerText = organData[currentOrgan].icon;
+            document.getElementById('organName').innerText = organData[currentOrgan].name;
+            document.getElementById('organDesc').innerText = organData[currentOrgan].desc;
+        }
+
+        function nextOrgan() {
+            currentOrgan = (currentOrgan + 1) % organData.length;
+            updateOrganDisplay();
+        }
+
+        function prevOrgan() {
+            currentOrgan = (currentOrgan - 1 + organData.length) % organData.length;
+            updateOrganDisplay();
+        }
+
+        /* Quiz Component */
+        const questions = [
+            {
+                q: "Câu 1: Quá trình tiêu hóa và hấp thụ chất dinh dưỡng diễn ra chủ yếu ở cơ quan nào?",
+                opts: [
+                    { text: "A. Dạ dày", correct: false },
+                    { text: "B. Khoang miệng", correct: false },
+                    { text: "C. Ruột nhỏ", correct: true },
+                    { text: "D. Ruột già", correct: false }
+                ]
+            },
+            {
+                q: "Câu 2: Enzyme Amylase trong nước bọt có tác dụng biến đổi chất nào?",
+                opts: [
+                    { text: "A. Protein thành amino acid", correct: false },
+                    { text: "B. Tinh bột chín thành đường maltose", correct: true },
+                    { text: "C. Lipid thành mỡ", correct: false },
+                    { text: "D. Vitamin thành chất khoáng", correct: false }
+                ]
+            },
+            {
+                q: "Câu 3: Thói quen nào sau đây giúp bảo vệ hệ tiêu hóa khỏe mạnh?",
+                opts: [
+                    { text: "A. Vừa ăn vừa xem điện thoại", correct: false },
+                    { text: "B. Nhai kỹ nuốt chậm và ăn đúng giờ", correct: true },
+                    { text: "C. Ăn thật nhiều đồ chua cay", correct: false },
+                    { text: "D. Bỏ bữa sáng thường xuyên", correct: false }
+                ]
+            }
+        ];
+
+        let currentQ = 0;
+
+        function loadQuestion() {
+            const qData = questions[currentQ];
+            document.getElementById('quizQuestion').innerText = qData.q;
+            const optContainer = document.getElementById('quizOptions');
+            optContainer.innerHTML = '';
+            document.getElementById('quizFeedback').innerText = '';
+            document.getElementById('nextBtn').style.display = 'none';
+
+            qData.opts.forEach(o => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-opt';
+                btn.innerText = o.text;
+                btn.onclick = () => checkAnswer(btn, o.correct);
+                optContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(btn, isCorrect) {
+            const allOpts = document.querySelectorAll('.quiz-opt');
+            allOpts.forEach(b => b.disabled = true);
+            if (isCorrect) {
+                btn.classList.add('correct');
+                document.getElementById('quizFeedback').innerText = "🎉 Chính xác! Bạn đã nắm rất vững kiến thức.";
+                document.getElementById('quizFeedback').style.color = "#059669";
+            } else {
+                btn.classList.add('incorrect');
+                document.getElementById('quizFeedback').innerText = "❌ Chưa đúng rồi, hãy suy nghĩ kĩ lại nhé!";
+                document.getElementById('quizFeedback').style.color = "#dc2626";
+            }
+            if (currentQ < questions.length - 1) {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            }
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            loadQuestion();
+        }
+
+        /* Speech Synthesis */
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'vi-VN';
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Trình duyệt không hỗ trợ đọc giọng nói.');
+            }
+        }
+
+        // Init
+        loadQuestion();
+    </script>
+</body>
+</html>
